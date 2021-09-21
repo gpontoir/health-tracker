@@ -4,12 +4,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>Health Tracker | Diário Alimentar</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" integrity="sha512-P9vJUXK+LyvAzj8otTOKzdfF1F3UYVl13+F8Fof8/2QNb8Twd6Vb+VD52I7+87tex9UXxnzPgWA3rH96RExA7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
         <style>
-
             .navbar{
                 height: 52px;
                 font-size: 14px;
@@ -84,7 +85,207 @@
                 cursor: pointer;
             }
 
+.fa, .fab, .fad, .fal, .far, .fas {
+    font-family: "Font Awesome 5 Free" !important;
+}
         </style>
+        <script>
+            function mensagem(mensagem) {
+                if (mensagem !== '') {
+                    $('#modalMensagemTexto').html(mensagem);
+                    $('#modalMensagem').modal('show');
+                } else {
+                    $('#modalMensagem').modal('hide');
+                    $('#modalMensagemTexto').html('');
+                }
+            }
+
+            function dadossessao(){
+                $.ajax({
+                    url: 'actions/dadossessao.php',
+                    crossDomain: true,
+                    timeout: 30000,
+                    complete: function (data) {
+                        if (data.status === 200) {
+                            var resposta = data.responseJSON;
+                            if (resposta.retorno === 'sucesso') {
+                                $('.cabecalho_usuario').html(resposta.dados.usuario_nome);
+                                $('.logado_usuario').val(resposta.dados.usuario_nome);
+                                $('.logado_datanascimento').val(resposta.dados.usuario_datanascimento.split('-').reverse().join('/'));
+                                $('.logado_email').val(resposta.dados.usuario_email);
+                                $('.logado_endereco').val(resposta.dados.usuario_endereco);
+                            } else {
+                                window.location.href = "/login.html";
+                            }
+                        } else {
+                            window.location.href = "/login.html";
+                        }
+                    },
+                    error: function (data) {
+                        window.location.href = "/login.html";
+                    }
+                });
+            }
+
+            function carregarLista(){
+                $.ajax({
+                    url: 'actions/listardiarioalimentar.php',
+                    crossDomain: true,
+                    timeout: 30000,
+                    complete: function (data) {
+                        if (data.status === 200) {
+                            var resposta = data.responseJSON;
+                            if (resposta.retorno === 'sucesso') {
+                                var listadados = '';
+                                var contador = 1;
+                                $.each(resposta.dados, function (key, value) {
+                                    listadados += '<tr>';
+                                    listadados += '<td>' + contador + '</td>';
+                                    listadados += '<td>' + value.diario_alimentar_data.split('-').reverse().join('/') + '</td>';
+                                    listadados += '<td>' + value.alimento_nome + ' ('+value.alimento_porcao+')</td>';
+                                    listadados += '<td>';
+                                    listadados += '<a data-toggle="modal dados_exibir" onclick="dadosExibir($(this))" data-target="#info_dados" data-campo1="' + value.diario_alimentar_data.split('-').reverse().join('/') + '" data-campo2="' + value.alimento_nome + ' ('+value.alimento_porcao+')" data-campo3="' + value.diario_alimentar_id + '" data-campo4="" data-campo5="" >';
+                                    listadados += '<span class="fas fa-info-circle">&nbsp;</span>';
+                                    listadados += '</a>';
+                                    listadados += '<a data-toggle="modal dados_excluir" onclick="dadosExcluir($(this))" data-target="#info_excluir" data-campo1="' + value.diario_alimentar_data.split('-').reverse().join('/') + '" data-campo2="' + value.alimento_nome + ' ('+value.alimento_porcao+')" data-campo3="' + value.diario_alimentar_id + '" data-campo4="" data-campo5="">';
+                                    listadados += '<span class="fas fa-trash-alt">&nbsp;</span>';
+                                    listadados += '</a>';   
+                                    listadados += '</td>';
+                                    listadados += '</tr>';
+                                    contador = contador + 1;
+                                });
+                                $('#lista').html(listadados);
+                            }
+                        } 
+                    },
+                });
+            }
+
+            function carregarListaAlimentos(){
+                $.ajax({
+                    url: 'actions/listaralimentos.php',
+                    crossDomain: true,
+                    timeout: 30000,
+                    complete: function (data) {
+                        if (data.status === 200) {
+                            var resposta = data.responseJSON;
+                            if (resposta.retorno === 'sucesso') {
+                                var listadados = '<option value="" selected hidden disabled>Selecionar alimento</option>';
+                                $.each(resposta.dados, function (key, value) {
+                                    listadados += '<option value="'+value.alimento_id+'">'+value.alimento_nome + ' ('+value.alimento_porcao+')</option>';
+                                });
+                                $('#alimentos').html(listadados);
+                            }
+                        } 
+                    },
+                });
+            }
+
+            function dadosExibir(item){
+                $('#sel31').val(item.attr('data-campo1'));
+                $('#sel32').val(item.attr('data-campo2'));
+                $('#info_dados').modal('show');
+            }
+
+            function dadosExcluir(item){
+                $('#diarioalimentar_excluir_id').val(item.attr('data-campo3'));
+                $('.diarioalimentar_removertexto').html('Tem certeza que deseja excluir o registro do dia ' + item.attr('data-campo1') + ' ?');
+                $('#info_excluir').modal('show');
+            }
+
+            $(document).ready(function () {
+                dadossessao();
+                carregarLista();
+                carregarListaAlimentos();
+                $('#botao_logout').click(function () {
+                    $.ajax({
+                        url: 'actions/logout.php',
+                        crossDomain: true,
+                        timeout: 30000,
+                        complete: function (data) {
+                            if (data.status === 200) {
+                                window.location.href = "/login.html";
+                            }
+                        },
+                    });
+                });
+
+                $("#formdiarioalimentarcadastro").submit(function (e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: 'actions/cadastrardiarioalimentar.php',
+                        type: 'post',
+                        dataType: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        cache: false,
+                        data: formData,
+                        timeout: 30000,
+                        beforeSend: function () {
+                            $('.diarioalimentar_botaocadastro').html('<div class="p-0"><span class="spinner-border text-danger" style="width: 15px; height: 15px;" role="status" arial-hidden="true"></span></div>');
+                            $('.diarioalimentar_botaocadastro').attr('disabled', 'disabled');
+                        },
+                        complete: function (data) {
+                            $('.diarioalimentar_botaocadastro').html('<i class="fas fa-save"></i>');
+                            $('.diarioalimentar_botaocadastro').removeAttr('disabled');
+                            if (data.status === 200) {
+                                var resposta = data.responseJSON;
+                                if (resposta.retorno === 'sucesso') {
+                                    window.location.href = "/diarioalimentar.html";
+                                } else {
+                                    mensagem(resposta.dados);
+                                }
+                            } else {
+                                mensagem('Atualize a pagina e tente novamente');
+                            }
+                        },
+                        error: function (data) {
+                            mensagem('Atualize a pagina e tente novamente');
+                        }
+                    });
+                });
+
+                $("#formdiarioalimentoexcluir").submit(function (e) {
+                    e.preventDefault();
+                    var formData = new FormData(this);
+                    $.ajax({
+                        url: 'actions/removerdiarioalimentar.php',
+                        type: 'post',
+                        dataType: false,
+                        contentType: false,
+                        processData: false,
+                        crossDomain: true,
+                        cache: false,
+                        data: formData,
+                        timeout: 30000,
+                        beforeSend: function () {
+                            $('.diarioalimentar_botaoexcluir').html('<div class="p-0"><span class="spinner-border text-danger" style="width: 15px; height: 15px;" role="status" arial-hidden="true"></span></div>');
+                            $('.diarioalimentar_botaoexcluir').attr('disabled', 'disabled');
+                        },
+                        complete: function (data) {
+                            $('.diarioalimentar_botaoexcluir').html('<i class="fas fa-save"></i>');
+                            $('.diarioalimentar_botaoexcluir').removeAttr('disabled');
+                            if (data.status === 200) {
+                                var resposta = data.responseJSON;
+                                if (resposta.retorno === 'sucesso') {
+                                    window.location.href = "/diarioalimentar.html";
+                                } else {
+                                    mensagem(resposta.dados);
+                                }
+                            } else {
+                                mensagem('Atualize a pagina e tente novamente');
+                            }
+                        },
+                        error: function (data) {
+                            mensagem('Atualize a pagina e tente novamente');
+                        }
+                    });
+                });
+
+            });
+        </script>
     </head>
     <body>
         <nav class="navbar navbar-inverse">
@@ -95,8 +296,8 @@
                     </a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a data-toggle="modal" data-target="#info_usuario"><span class="far fa-user">&nbsp;</span> Usuário XYZ</a></li>
-                    <li style="margin-left: 30px;"><a href="login.html"><span class="fas fa-sign-out-alt">&nbsp;</span></a></li>
+                    <li><a data-toggle="modal" data-target="#info_usuario"><span class="far fa-user">&nbsp;</span> <span class="cabecalho_usuario">&nbsp;</span></a></li>
+                    <li style="margin-left: 30px;"><a id="botao_logout"><span class="fas fa-sign-out-alt">&nbsp;</span></a></li>
                 </ul>
             </div>
         </nav>
@@ -148,44 +349,37 @@
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>08/06/2020</td>
-                                    <td>Macarrão (300g)</td>
-                                    <td>
-                                        <a data-toggle="modal" data-target="#info_peso1">
-                                            <span class="fas fa-info-circle">&nbsp;</span>
-                                        </a>
-                                        <a data-toggle="modal" data-target="#info_excluir1">
-                                            <span class="fas fa-trash-alt">&nbsp;</span>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>09/06/2020</td>
-                                    <td>Lasanha (300g)</td>
-                                    <td>
-                                        <a data-toggle="modal" data-target="#info_peso2">
-                                            <span class="fas fa-info-circle">&nbsp;</span>
-                                        </a>
-                                        <a data-toggle="modal" data-target="#info_excluir2">
-                                            <span class="fas fa-trash-alt">&nbsp;</span>
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tbody id="lista">
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </main>
-
-        <div class="modal" id="info_peso1">
+        <div class="modal fade" id="modalMensagem" data-keyboard="false" data-backdrop="static" style="z-index: 9999;">
+            <div class="modal-dialog modal-dialog-centered justify-content-center d-flex align-items-center">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <p class="heading lead" id="modalMensagemTitulo"></p>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <div id="modalMensagemTexto">
+    
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="info_dados" style="z-index: 8888;">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
-                    <form method="POST" action="" enctype="">
+                    <form method="POST" id="formdiarioalimentarinfo">
                         <div class="modal-header">
                             <h4 class="modal-title"> Alimento</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -195,16 +389,16 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="sel1">Data:</label>
-                                            <input type="text" readonly class="form-control" value="08/06/2020">
+                                            <label for="sel31">Data:</label>
+                                            <input type="text" id="sel31" readonly class="form-control" value="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="sel1">Alimento:</label>
-                                            <input type="text" readonly class="form-control" value="Macarrão (300g)">
+                                            <label for="sel32">Alimento:</label>
+                                            <input type="text" id="sel32" readonly class="form-control" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -214,84 +408,30 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal" id="info_peso2">
+        <div class="modal" id="info_excluir" style="z-index: 8888;">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
-                    <form method="POST" action="" enctype="">
-                        <div class="modal-header">
-                            <h4 class="modal-title"> Alimento</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="sel1">Data:</label>
-                                            <input type="text" readonly class="form-control" value="09/06/2020">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label for="sel1">Alimento:</label>
-                                            <input type="text" readonly class="form-control" value="Lasanha (300g)">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="info_excluir1">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <form method="POST" action="" enctype="">
+                    <form method="POST" id="formdiarioalimentoexcluir" enctype="multipart/form-data" onsubmit="return false">
                         <div class="modal-header">
                             <h4 class="modal-title"> Excluir</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <input type="hidden" id="diarioalimentar_excluir_id" value="" name="diarioalimentar_excluir_id" />
                         </div>
                         <div class="modal-body">
-                            <h6>Tem certeza que deseja excluir o registro do dia 08/06/2020 ?</h6>
+                            <h6 class="diarioalimentar_removertexto">  </h6>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" data-dismiss="modal">Sim</button> 
+                            <button type="submit" class="btn btn-warning diarioalimentar_botaoexcluir">Sim</button> 
                             <button type="button" class="btn" data-dismiss="modal">Não</button>  
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
-        <div class="modal" id="info_excluir2">
+        <div class="modal" id="adicionar" style="z-index: 8888;">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
-                    <form method="POST" action="" enctype="">
-                        <div class="modal-header">
-                            <h4 class="modal-title"> Excluir</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <h6>Tem certeza que deseja excluir o registro do dia 09/06/2020 ?</h6>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-warning" data-dismiss="modal">Sim</button> 
-                            <button type="button" class="btn" data-dismiss="modal">Não</button>  
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal" id="adicionar">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <form method="POST" action="" enctype="">
+                    <form method="POST" id="formdiarioalimentarcadastro" enctype="multipart/form-data" onsubmit="return false">
                         <div class="modal-header">
                             <h4 class="modal-title"> Adicionar</h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -301,8 +441,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="sel1">Data:</label>
-                                            <input type="date" id="sel1" class="form-control" value="">
+                                            <label for="sel41">Data:</label>
+                                            <input type="date" name="datas" id="sel41" class="form-control" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -310,14 +450,9 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="sel2">Alimentos:</label>
+                                            <label for="alimentos">Alimentos:</label>
                                             <br>
-											<select name="alimentos" id="alimentos">
-												<option value="null">Selecionar alimento</option>
-												<option value="lasanha">Lasanha (300g)</option>
-												<option value="macarrao">Macarrão (300g)</option>
-												<option value="miojo">Miojo (300g)</option>
-												<option value="peitoperu">Peito de Peru Seara (220g)</option>
+											<select name="alimentos" class="form-control" id="alimentos">
 											</select>
                                         </div>
                                     </div>
@@ -325,7 +460,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" data-dismiss="modal" class="btn btn-default p-2">
+                            <button type="submit" class="btn btn-default p-2 diarioalimentar_botaocadastro">
                                 <i class="fas fa-save"></i>
                             </button>
                         </div>
@@ -333,8 +468,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal" id="info_usuario">
+        <div class="modal" id="info_usuario" style="z-index: 8888;">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <form method="POST" action="" enctype="">
@@ -345,18 +479,32 @@
                         <div class="modal-body">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-6">
                                         <div class="form-group">
-                                            <label for="sel1">Nome:</label>
-                                            <input type="text" readonly class="form-control" value="Usuário XYZ">
+                                            <label for="sel97">Nome:</label>
+                                            <input type="text" id="sel97" readonly class="form-control logado_usuario" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <label for="sel96">Data de nascimento:</label>
+                                            <input type="text" id="sel96" readonly class="form-control logado_datanascimento" value="">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="form-group">
-                                            <label for="sel1">E-mail:</label>
-                                            <input type="text" readonly class="form-control" value="usuarioxyz@gmail.com">
+                                            <label for="sel98">E-mail:</label>
+                                            <input type="text" id="sel98" readonly class="form-control logado_email" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel95">Endereço:</label>
+                                            <input type="text" id="sel95" readonly class="form-control logado_endereco" value="">
                                         </div>
                                     </div>
                                 </div>

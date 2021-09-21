@@ -1,0 +1,370 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Health Tracker | Diário Alimentar</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <style>
+
+            .navbar{
+                height: 52px;
+                font-size: 14px;
+                border-radius: 0px;
+                background-color: #424242;
+                margin-bottom: 0px;
+            }
+
+            .navbar-nav{
+                -ms-flex-direction: inherit;
+                flex-direction: inherit;
+            }
+
+            .navbar-header{
+                width: 190px;
+            }
+
+            .navbar-right li{
+                cursor: pointer;
+                color: #ebebeb;
+            }
+
+            .navbar-right li a{
+                cursor: pointer;
+                color: #ebebeb;
+            }
+
+            .sidenav {
+                height: 100%;
+                width: 220px;
+                position: fixed;
+                z-index: 1;
+                top: 52px;
+                left: 0;
+                background-color: #2f2f2f;
+                background-image: url('img/fundomenu.jpg');
+                overflow-x: hidden;
+                border-right: 8px solid #e5be73;
+            }
+
+            .sidenav a {
+                padding: 10px 8px 10px 16px;
+                text-decoration: none;
+                font-size: 14px;
+                color: #ebebeb;
+                display: block;
+                border-bottom: 0.5px solid #e5be73;
+            }
+
+            .sidenav a:hover {
+                color: #2f2f2f;
+                background-color: #e5be73;
+            }
+
+            .sidenavactive {
+                color: #2f2f2f !important;
+                background-color: #e5be73 !important;
+            }
+
+            nav .container-fluid {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+            }
+
+            main .container-fluid {
+                margin-left: 220px;
+                width: auto !important;
+                padding: 10px 40px 10px 20px;
+            }
+
+            .fa-info-circle, .fa-trash-alt{
+                cursor: pointer;
+            }
+
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img src="img/logo_cabecalho.png" style="width: 190px; height: 32px;" />
+                    </a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a data-toggle="modal" data-target="#info_usuario"><span class="far fa-user">&nbsp;</span> Usuário XYZ</a></li>
+                    <li style="margin-left: 30px;"><a href="login.html"><span class="fas fa-sign-out-alt">&nbsp;</span></a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="sidenav">
+            <a href="index.html">
+                <span class="fas fa-home" style="padding-right: 10px;"></span>
+                Home
+            </a>
+            <a href="diarioalimentar.html" class="sidenavactive">
+                <span class="fas fa-heartbeat" style="padding-right: 10px;"></span>
+                Diário Alimentar
+            </a>
+            <a href="diarioExercicios.html">
+                <span class="fas fa-biking" style="padding-right: 10px;"></span>
+                Diário Exercícios
+            </a>
+            <a href="peso.html">
+                <span class="fas fa-balance-scale-left" style="padding-right: 10px;"></span>
+                Peso
+            </a>
+            <a href="relatorios.html">
+                <span class="fas fa-chart-line" style="padding-right: 10px;"></span>
+                Relatórios
+            </a>
+            <a href="album.html">
+                <span class="fas fa-camera" style="padding-right: 10px;"></span>
+                Albúm
+            </a>
+        </div>
+        <main>
+            <div class="container-fluid">
+                <div class="row py-2">
+                    <div class="col-12">
+                        <h2>
+                            Diário Alimentar &nbsp;&nbsp;&nbsp;<a data-toggle="modal" data-target="#adicionar">
+							<br>
+							<i style="vertical-align: top; font-size: 14px; height: 20px; background-color: #e5be73; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 24px; margin-top: 5px; cursor: pointer;" class="fas fa-plus"></i> <font size="3">Inserir novo alimento</font></a>
+                        </h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data</th>
+                                    <th>Alimento</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>08/06/2020</td>
+                                    <td>Macarrão (300g)</td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#info_peso1">
+                                            <span class="fas fa-info-circle">&nbsp;</span>
+                                        </a>
+                                        <a data-toggle="modal" data-target="#info_excluir1">
+                                            <span class="fas fa-trash-alt">&nbsp;</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>09/06/2020</td>
+                                    <td>Lasanha (300g)</td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#info_peso2">
+                                            <span class="fas fa-info-circle">&nbsp;</span>
+                                        </a>
+                                        <a data-toggle="modal" data-target="#info_excluir2">
+                                            <span class="fas fa-trash-alt">&nbsp;</span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="modal" id="info_peso1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Alimento</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Data:</label>
+                                            <input type="text" readonly class="form-control" value="08/06/2020">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Alimento:</label>
+                                            <input type="text" readonly class="form-control" value="Macarrão (300g)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="info_peso2">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Alimento</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Data:</label>
+                                            <input type="text" readonly class="form-control" value="09/06/2020">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Alimento:</label>
+                                            <input type="text" readonly class="form-control" value="Lasanha (300g)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="info_excluir1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Excluir</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Tem certeza que deseja excluir o registro do dia 08/06/2020 ?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Sim</button> 
+                            <button type="button" class="btn" data-dismiss="modal">Não</button>  
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="info_excluir2">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Excluir</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Tem certeza que deseja excluir o registro do dia 09/06/2020 ?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-dismiss="modal">Sim</button> 
+                            <button type="button" class="btn" data-dismiss="modal">Não</button>  
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="adicionar">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Adicionar</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Data:</label>
+                                            <input type="date" id="sel1" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                </div>
+								
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel2">Alimentos:</label>
+                                            <br>
+											<select name="alimentos" id="alimentos">
+												<option value="null">Selecionar alimento</option>
+												<option value="lasanha">Lasanha (300g)</option>
+												<option value="macarrao">Macarrão (300g)</option>
+												<option value="miojo">Miojo (300g)</option>
+												<option value="peitoperu">Peito de Peru Seara (220g)</option>
+											</select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" data-dismiss="modal" class="btn btn-default p-2">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="info_usuario">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="POST" action="" enctype="">
+                        <div class="modal-header">
+                            <h4 class="modal-title"> Usuário</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Nome:</label>
+                                            <input type="text" readonly class="form-control" value="Usuário XYZ">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="sel1">E-mail:</label>
+                                            <input type="text" readonly class="form-control" value="usuarioxyz@gmail.com">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
