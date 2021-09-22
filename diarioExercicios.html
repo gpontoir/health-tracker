@@ -81,6 +81,28 @@
                 padding: 10px 40px 10px 20px;
             }
 
+@media only screen and (max-width: 768px) {
+    main .container-fluid {
+        margin-left: 0px !important;
+        width: auto !important;
+        padding: 10px 40px 10px 20px !important;
+    }   
+}
+
+.navbar-toggler{
+    padding-bottom: -5px;
+width: 1.2em !important;
+height: 1.2em !important;
+border-radius: 0px !important;
+border: 0px !important;
+
+}
+
+.navbar-toggler-icon{
+    width: 1.2em !important;
+    height: 1.2em !important;
+}
+
             .fa-info-circle, .fa-trash-alt{
                 cursor: pointer;
             }
@@ -288,7 +310,7 @@
         </script>
     </head>
     <body>
-        <nav class="navbar navbar-inverse">
+        <nav class="navbar navbar-inverse navbar-dark">
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
@@ -298,11 +320,14 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a data-toggle="modal" data-target="#info_usuario"><span class="far fa-user">&nbsp;</span> <span class="cabecalho_usuario">&nbsp;</span></a></li>
                     <li style="margin-left: 30px;"><a id="botao_logout"><span class="fas fa-sign-out-alt">&nbsp;</span></a></li>
+                    <button class="navbar-toggler d-md-none text-center" type="button" data-toggle="collapse" data-target="#textoNavbar" aria-controls="textoNavbar" aria-expanded="false" aria-label="Alterna navegação">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
                 </ul>
             </div>
         </nav>
-        <div class="sidenav">
-            <a href="index.html">
+        <div class="sidenav d-md-none collapse w-100 navbar-collapse" id="textoNavbar">
+            <a href="index.html" >
                 <span class="fas fa-home" style="padding-right: 10px;"></span>
                 Home
             </a>
@@ -327,6 +352,33 @@
                 Albúm
             </a>
         </div>
+        <div class="sidenav d-none d-md-inline">
+            <a href="index.html" >
+                <span class="fas fa-home" style="padding-right: 10px;"></span>
+                Home
+            </a>
+            <a href="diarioalimentar.html">
+                <span class="fas fa-heartbeat" style="padding-right: 10px;"></span>
+                Diário Alimentar
+            </a>
+            <a href="diarioExercicios.html" class="sidenavactive">
+                <span class="fas fa-biking" style="padding-right: 10px;"></span>
+                Diário Exercícios
+            </a>
+            <a href="peso.html">
+                <span class="fas fa-balance-scale-left" style="padding-right: 10px;"></span>
+                Peso
+            </a>
+            <a href="relatorios.html">
+                <span class="fas fa-chart-line" style="padding-right: 10px;"></span>
+                Relatórios
+            </a>
+            <a href="album.html">
+                <span class="fas fa-camera" style="padding-right: 10px;"></span>
+                Albúm
+            </a>
+        </div>
+
         <main>
             <div class="container-fluid">
                 <div class="row py-2">

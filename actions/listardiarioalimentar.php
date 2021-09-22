@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Action responsavél pelas listagem dos registros do diario de alimentos
+ * 
+ * @package Default
+ * @author Gabriela Almeida
+ * @since 2021-09-19
+ * @version 1.0
+ * 
+ */
+
 ini_set('error_log', 'error.log');
 ini_set('memory_limit', '512M');
 ini_set('max_execution_time', 2000000);

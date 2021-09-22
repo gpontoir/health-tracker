@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * Action responsavél pelo cadastro do usuário
+ * 
+ * @package Default
+ * @author Gabriela Almeida
+ * @since 2021-09-19
+ * @version 1.0
+ * 
+ */
+
 ini_set('error_log', 'error.log');
 ini_set('memory_limit', '512M');
 ini_set('max_execution_time', 2000000);
@@ -37,7 +47,7 @@ if ($v_cadastro_nome !== '' && $v_cadastro_datanascimento !== ''
             $v_usuario_id   = $fusuario->cadastrarUsuario($v_cadastro_nome, $v_cadastro_email, $v_cadastro_endereco, $v_cadastro_datanascimento, '1');
             $v_usuario_acao = $v_usuario_id;
         }
-        if ($v_usuario_acao !== false && $v_usuario_acao > 0) {
+        if ($v_usuario_acao !== false) {
             $v_senha_cadastro = $fusuario->cadastrarSenha($v_usuario_id, $v_cadastro_senha);
             if ($v_senha_cadastro !== false) {
                 $v_app_retorno['dados']   = $v_usuario_id;
